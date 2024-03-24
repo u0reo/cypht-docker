@@ -155,21 +155,15 @@ if [ ! -z ${CYPHT_DEFAULT_SETTING_ENABLE_SIEVE_FILTER+x} ]; then sed -i "s/; def
 session_type=$(sed -n 's/session_type=//p' ${CYPHT_CONFIG_FILE})
 auth_type=$(sed -n 's/auth_type=//p' ${CYPHT_CONFIG_FILE})
 user_config_type=$(sed -n 's/user_config_type=//p' ${CYPHT_CONFIG_FILE})
+db_connection_type=$(sed -n 's/db_connection_type=//p' ${CYPHT_CONFIG_FILE})
 db_host=$(sed -n 's/db_host=//p' ${CYPHT_CONFIG_FILE})
+db_socket=$(sed -n 's/db_socket=//p' ${CYPHT_CONFIG_FILE})
 db_name=$(sed -n 's/db_name=//p' ${CYPHT_CONFIG_FILE})
 db_user=$(sed -n 's/db_user=//p' ${CYPHT_CONFIG_FILE})
 db_pass=$(sed -n 's/db_pass=//p' ${CYPHT_CONFIG_FILE})
 db_driver=$(sed -n 's/db_driver=//p' ${CYPHT_CONFIG_FILE})
 if [ "${session_type}" = "DB" ] || [ "${auth_type}" = "DB" ] || [ "${user_config_type}" = "DB" ]
 then
-    sed -i "s/CYPHT_SESSION_TYPE/${session_type}/" /tmp/cypht_setup_database.php
-    sed -i "s/CYPHT_AUTH_TYPE/${auth_type}/" /tmp/cypht_setup_database.php
-    sed -i "s/CYPHT_USER_CONFIG_TYPE/${user_config_type}/" /tmp/cypht_setup_database.php
-    sed -i "s/CYPHT_DB_HOST/${db_host}/" /tmp/cypht_setup_database.php
-    sed -i "s/CYPHT_DB_NAME/${db_name}/" /tmp/cypht_setup_database.php
-    sed -i "s/CYPHT_DB_USER/${db_user}/" /tmp/cypht_setup_database.php
-    sed -i "s/CYPHT_DB_PASS/${db_pass}/" /tmp/cypht_setup_database.php
-    sed -i "s/CYPHT_DB_DRIVER/${db_driver}/" /tmp/cypht_setup_database.php
     php /tmp/cypht_setup_database.php
 fi
 

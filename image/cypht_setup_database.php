@@ -1,16 +1,38 @@
 <?php
 $connected = false;
-$session_type = CYPHT_SESSION_TYPE;
-$auth_type = CYPHT_AUTH_TYPE;
-$user_config_type = CYPHT_USER_CONFIG_TYPE;
-$db_driver = CYPHT_DB_DRIVER;
-while(!$connected) {
-    try{
-    $conn = new pdo('CYPHT_DB_DRIVER:host=CYPHT_DB_HOST;dbname=CYPHT_DB_NAME', 'CYPHT_DB_USER', 'CYPHT_DB_PASS');
+$session_type = $_ENV['CYPHT_SESSION_TYPE'];
+$auth_type = $_ENV['CYPHT_AUTH_TYPE'];
+$user_config_type = $_ENV['CYPHT_USER_CONFIG_TYPE'];
+$db_conn_type = $_ENV['CYPHT_DB_CONNECTION_TYPE'];
+$db_host = $_ENV['CYPHT_DB_HOST'];
+$db_socket = $_ENV['CYPHT_DB_SOCKET'];
+$db_name = $_ENV['CYPHT_DB_NAME'];
+$db_user = $_ENV['CYPHT_DB_USER'];
+$db_pass = $_ENV['CYPHT_DB_PASS'];
+$db_driver = $_ENV['CYPHT_DB_DRIVER'];
+
+while (!$connected) {
+    $dsn = '';
+    if ($db_driver == 'sqlite') {
+        $dsn = sprintf('%s:%s', $db_driver, $db_socket);
+    }
+    if ($db_conn_type == 'socket') {
+        $dsn = sprintf('%s:unix_socket=%s;dbname=%s', $db_driver, $db_socket, $db_name);
+    }
+    else {
+        if ($db_port) {
+            $dsn = sprintf('%s:host=%s;port=%s;dbname=%s', $db_driver, $db_host, $db_port, $db_name);
+        }
+        else {
+            $dsn = sprintf('%s:host=%s;dbname=%s', $db_driver, $db_host, $db_name);
+        }
+    }
+    try {
+        $conn = new PDO($dsn, $db_user, $db_pass);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    printf("Database connection successful ...\n");
+        printf("Database connection successful ...\n");
         $connected = true;
-    } catch(PDOException $e){
+    } catch (PDOException $e) {
         error_log('Waiting for database connection ... (' . $e->getMessage() . ')');
         sleep(1);
     }

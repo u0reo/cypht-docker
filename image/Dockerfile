@@ -38,7 +38,8 @@ RUN set -e \
     && composer self-update --2 \
     && composer install \
     && echo "post_max_size = 60M" >> /usr/local/etc/php/php.ini \
-    && echo "upload_max_filesize = 50M" >> /usr/local/etc/php/php.ini
+    && echo "upload_max_filesize = 50M" >> /usr/local/etc/php/php.ini \
+    && echo "clear_env=no" >> /usr/local/etc/php-fpm.d/www.conf
 
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY supervisord.conf /etc/supervisord.conf
